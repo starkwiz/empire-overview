@@ -14,6 +14,8 @@
 // @grant				GM_registerMenuCommand
 // @grant				GM_xmlhttpRequest
 // @grant				GM_openInTab
+// Change Below to grant to enable console logs
+// @nogrant				GM_log
 //
 // @exclude				http://board.*.ikariam.gameforge.com*
 // @exclude				http://*.ikariam.gameforge.*/board
@@ -21,7 +23,7 @@
 //
 // @require				https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // @require				https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
-// @require				http://malsup.github.com/jquery.form.js
+// @require				https://malsup.github.io/jquery.form.js
 // @require				https://momentjs.com/downloads/moment-with-locales.min.js
 // @require				https://momentjs.com/downloads/moment-timezone-with-data.js
 // @require				https://cdnjs.cloudflare.com/ajax/libs/anchorme/2.0.0/anchorme.min.js
@@ -1032,7 +1034,11 @@
 		this._tradeGoodID = 0;
 		this.knownTime = $.now();
 		this._lastPopUpdate = $.now();
-		this._buildings = new Array(unsafeWindow.ikariam.backgroundView.screen.data.position.length); // unsafeWindow.ikariam.backgroundView.screen.data.position.length
+        if(!(/.*view=city.*/.test(window.document.location))){
+            this._buildings = new Array(20); // 20 or unsafeWindow.ikariam.backgroundView.screen.data.position.length
+        } else {
+            this._buildings = new Array(unsafeWindow.ikariam.backgroundView.screen.data.position.length); // 20 or unsafeWindow.ikariam.backgroundView.screen.data.position.length
+        }
 		var i = this._buildings.length;
 		while(i--) { this._buildings[i] = new Building(this, i); }
 		this._research = new CityResearch(this);
