@@ -5822,12 +5822,32 @@
 					});
 				});
 			},
+            governmentTypeMap:function(govType)
+			{
+				if (govType.ip == this) { return govType.op; }
+			},
 			parsePalace:function()
 			{
 				var LD = Constant.LanguageData[database.settings.languageChange.value];
-//				console.log(LD.palacetxt);
+				//console.log(LD.palacetxt);
+                //Government Types Mapping Table, so that we don't have to change the existing code and functions.
+                const govTypesArr = [
+                {op : "ikakratie", ip: "//gf3.geo.gfsrv.net/cdn2e/a403727326be282fa7eb729718e05a.jpg"},
+                {op : "aristokratie", ip: "//gf3.geo.gfsrv.net/cdn25/1d4933352dedf6e0269ef0717ceaeb.jpg"},
+                {op : "demokratie", ip: "//gf1.geo.gfsrv.net/cdncc/8eb243d68d7e1e7d57c4fbf4416663.jpg"},
+                {op : "diktatur", ip: "//gf3.geo.gfsrv.net/cdneb/d23aed943dedf6449c9cff81b6a036.jpg"},
+                {op : "nomokratie", ip: "//gf2.geo.gfsrv.net/cdnd5/e7f322861f76c39e7e86bcfac97f71.jpg"},
+                {op : "oligarchie", ip: "//gf3.geo.gfsrv.net/cdn2a/c07616e9e2b93844dddba80e389cc4.jpg"},
+                {op : "technokratie", ip: "//gf2.geo.gfsrv.net/cdn73/8b39242f51982b91c8933bdbc6267e.jpg"},
+                {op : "theokratie", ip: "//gf1.geo.gfsrv.net/cdn69/4eede67db23c07f47e73c483a5f32c.jpg"},
+                {op : "anarchie", ip: "//gf1.geo.gfsrv.net/cdnfa/64b83ee689e6b30b96476b93e53cef.jpg"},
+                {op : "xenokratie", ip: "//gf2.geo.gfsrv.net/cdn19/791b85552420fc2f685aeee86d852d.jpg"}
+                ];
 				var city = ikariam.getCurrentCity;
-				var governmentType = $('#formOfRuleContent').find('td.government_pic img').attr('src').slice(16,-8);
+				//var governmentType = $('#formOfRuleContent').find('td.government_pic img').attr('src').slice(16,-8); //This method doesn't work anymore.
+                var govTypeSrc = $('#formOfRuleContent').find('td.government_pic img').attr('src');
+                var governmentType = govTypesArr.map(this.governmentTypeMap, govTypeSrc).join(''); //Fix for buildingTime Error
+                if (governmentType == '') { governmentType = "ikakratie"; }; //Ikakratie Fail-Safe
 				var changed = (database.getGlobalData.getGovernmentType != governmentType);
 				database.getGlobalData.governmentType = governmentType;
 				if(changed) events(Constant.Events.GLOBAL_UPDATED).pub({type:'government'});
@@ -5880,7 +5900,7 @@
 					citysort += $('#formOfRuleContent').parent().next('div').find('div.content > table > tbody > tr:not(:first) > td.left:contains('+database.cities[c].getName+')').parent().prop('outerHTML')+'\r\n';
 				});
 				$('#formOfRuleContent').parent().next('div').find('div.content > table > tbody').html(citysort);
-				render.toast(Utils.format('{0}: {1} {2} {3} {4}',[LD.updated_,LD.palace,LD.tothe,LD[city.isCapital?'capital':'colony'],LD.leftquot+city._name+LD.rightquot]));
+				render.toast(Utils.format('{0}: {1} {2} {3} {4} </br> {5}: {6}',[LD.updated_,LD.palace,LD.tothe,LD[city.isCapital?'capital':'colony'],LD.leftquot+city._name+LD.rightquot,LD.government,LD[database.getGlobalData.getGovernmentType]]));
 			},
 			parsechangeGovernment:function()
 			{
