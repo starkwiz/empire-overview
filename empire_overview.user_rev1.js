@@ -31,7 +31,7 @@
 // @license				GPL-3.0-or-later
 // @compatible			chrome
 //
-// @version				1.2
+// @version				8.7.2
 //
 // ==/UserScript==
 /*************************************************
